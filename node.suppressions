@@ -134,3 +134,12 @@
    ...
    fun:libusb_bulk_transfer
 }
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:_Znwm
+   fun:_ZN4node22PerIsolatePlatformData28FlushForegroundTasksInternalEv
+   ...
+   fun:_ZN4node16NodeMainInstance3RunEv
+}

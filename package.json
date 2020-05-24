@@ -23,10 +23,10 @@
   },
   "homepage": "https://github.com/tidepool-org/node-mtp#readme",
   "dependencies": {
-    "napi-macros": "2.0.0",
     "node-gyp-build": "4.2.1"
   },
   "devDependencies": {
+    "node-addon-api": "^3.0.0",
     "prebuildify": "3.0.4"
   },
   "os": [

@@ -1,15 +1,30 @@
 {
     "targets": [{
         "target_name": "module",
-        "sources": [ "./src/module.c" ],
-        "library_dirs": [
-            "../lib"
+        "cflags": ["-Wpedantic"],
+        "cflags_cc": ["-Wpedantic"],
+        "cflags!": ["-fno-exceptions"],
+        "cflags_cc!": ["-fno-exceptions", "-Wpedantic"],
+        "xcode_settings": {
+            "GCC_ENABLE_CPP_EXCEPTIONS": "YES",
+            "CLANG_CXX_LIBRARY": "libc++",
+            "MACOSX_DEPLOYMENT_TARGET": "10.7",
+        },
+        "msvs_settings": {
+            "VCCLCompilerTool": {
+                "ExceptionHandling": 1
+            },
+        },
+        "sources": [
+            "./src/module/module.cc",
+            "./src/module/DeviceListEntry.cc",
+            "./src/module/Device.cc"
         ],
         "libraries": [
-	        "-lmtp"
+            "-lmtp"
         ],
         "include_dirs": [
-          "<!(node -e \"require('napi-macros')\")"
+            "<!@(node -p \"require('node-addon-api').include\")"
         ]
     }],
 }
