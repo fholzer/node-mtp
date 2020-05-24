@@ -1,0 +1,12 @@
+{
+   libusb init
+   Memcheck:Leak
+   ...
+   fun:libusb_init
+}
+{
+   libmtp init
+   Memcheck:Leak
+   ...
+   fun:LIBMTP_Init
+}

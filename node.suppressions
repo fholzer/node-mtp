@@ -1,0 +1,136 @@
+{
+   <debug_signal_thread_stack_storage>
+   Memcheck:Leak
+   match-leak-kinds: possible
+   ...
+   fun:pthread_create*
+   fun:_ZN4node9inspector5Agent5StartERKSsRKNS_12DebugOptionsESt10shared_ptrINS_15ExclusiveAccessINS_8HostPortENS_9MutexBaseINS_16LibuvMutexTraitsEEEEEEb
+   ...
+}
+{
+   <node_init_once_per_process>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN4node24InitializeOncePerProcessEiPPc
+}
+{
+   <node_register_isolate>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN4node12NodePlatform15RegisterIsolateEPN2v87IsolateEP9uv_loop_s
+   fun:_ZN4node16NodeMainInstanceC1EPN2v87Isolate12CreateParamsEP9uv_loop_sPNS_20MultiIsolatePlatformERKSt6vectorISsSaISsEESD_PKS9_ImSaImEE
+}
+{
+   <node_delete_isolate_memory_tear_down>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN2v88internal15MemoryAllocator8TearDownEv
+   ...
+   fun:_ZN2v88internal7Isolate6DeleteEPS1_
+}
+{
+   <node_unregister_isolate_shutdown>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN4node22PerIsolatePlatformData8ShutdownEv
+   fun:_ZN4node12NodePlatform17UnregisterIsolateEPN2v87IsolateE
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:_Znwm
+   fun:_ZN4node22PerIsolatePlatformData28FlushForegroundTasksInternalEv
+   fun:_ZN4node12NodePlatform10DrainTasksEPN2v87IsolateE
+   fun:_ZN4node16NodeMainInstance3RunEv
+   fun:_ZN4node5StartEiPPc
+   fun:(below main)
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:_Znwm
+   fun:_ZN2v88internal13MemoryReducer13ScheduleTimerEd.part.13
+   fun:_ZN2v88internal4Heap28NotifyOldGenerationExpansionEv
+   fun:_ZN2v88internal16LargeObjectSpace11AllocateRawEiNS0_13ExecutabilityE.part.514
+   fun:_ZN2v88internal16LargeObjectSpace11AllocateRawEi
+   fun:_ZN2v88internal4Heap11AllocateRawEiNS0_14AllocationTypeENS0_16AllocationOriginENS0_19AllocationAlignmentE
+   fun:_ZN2v88internal4Heap26AllocateRawWithRetryOrFailEiNS0_14AllocationTypeENS0_16AllocationOriginENS0_19AllocationAlignmentE
+   fun:_ZN2v88internal7Factory23NewFixedArrayWithFillerENS0_9RootIndexEiNS0_6ObjectENS0_14AllocationTypeE
+   fun:_ZN2v88internal7Factory20NewFixedArrayWithMapINS0_10FixedArrayEEENS0_6HandleIT_EENS0_9RootIndexEiNS0_14AllocationTypeE
+   fun:_ZN2v88internal9HashTableINS0_11StringTableENS0_16StringTableShapeEE11NewInternalEPNS0_7IsolateEiNS0_14AllocationTypeE
+   fun:_ZN2v88internal9HashTableINS0_11StringTableENS0_16StringTableShapeEE3NewEPNS0_7IsolateEiNS0_14AllocationTypeENS0_15MinimumCapacityE
+   fun:_ZN2v88internal9HashTableINS0_11StringTableENS0_16StringTableShapeEE14EnsureCapacityEPNS0_7IsolateENS0_6HandleIS2_EEiNS0_14AllocationTypeE
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:_Znwm
+   fun:_ZN4node22PerIsolatePlatformData15PostDelayedTaskESt10unique_ptrIN2v84TaskESt14default_deleteIS3_EEd
+   fun:_ZN2v88internal13MemoryReducer13ScheduleTimerEd.part.13
+   fun:_ZN2v88internal4Heap28NotifyOldGenerationExpansionEv
+   fun:_ZN2v88internal16LargeObjectSpace11AllocateRawEiNS0_13ExecutabilityE.part.514
+   fun:_ZN2v88internal16LargeObjectSpace11AllocateRawEi
+   fun:_ZN2v88internal4Heap11AllocateRawEiNS0_14AllocationTypeENS0_16AllocationOriginENS0_19AllocationAlignmentE
+   fun:_ZN2v88internal4Heap26AllocateRawWithRetryOrFailEiNS0_14AllocationTypeENS0_16AllocationOriginENS0_19AllocationAlignmentE
+   fun:_ZN2v88internal7Factory23NewFixedArrayWithFillerENS0_9RootIndexEiNS0_6ObjectENS0_14AllocationTypeE
+   fun:_ZN2v88internal7Factory20NewFixedArrayWithMapINS0_10FixedArrayEEENS0_6HandleIT_EENS0_9RootIndexEiNS0_14AllocationTypeE
+   fun:_ZN2v88internal9HashTableINS0_11StringTableENS0_16StringTableShapeEE11NewInternalEPNS0_7IsolateEiNS0_14AllocationTypeE
+   fun:_ZN2v88internal9HashTableINS0_11StringTableENS0_16StringTableShapeEE3NewEPNS0_7IsolateEiNS0_14AllocationTypeENS0_15MinimumCapacityE
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:maybe_resize
+   fun:uv__io_start
+   fun:uv__signal_loop_once_init
+   fun:uv_signal_init
+   fun:uv_loop_init
+   fun:uv_default_loop
+   fun:_ZN4node5StartEiPPc
+   fun:(below main)
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: definite
+   fun:_Znwm
+   fun:napi_module_register
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:dlopen_doit
+   ...
+   fun:dlopen@@GLIBC_2.2.5
+   fun:_ZZN4node7binding6DLOpenERKN2v820FunctionCallbackInfoINS1_5ValueEEEENKUlPNS0_4DLibEE_clES8_
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:dl_open_worker
+   ...
+   fun:dlopen_doit
+}
+{
+   <libusb_bluk_transfer>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:libusb_handle_events_completed
+   ...
+   fun:libusb_bulk_transfer
+}

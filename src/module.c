@@ -94,6 +94,128 @@ NAPI_METHOD(attach) {
   return NULL;
 }
 
+#define extractDeviceStringProperty(func, prop) \
+    cval = LIBMTP_Get_ ## func(device); \
+    if(cval == NULL) { \
+      nerr = napi_set_named_property(env, dobj, #prop, null_object); \
+    } else { \
+      NAPI_STATUS_THROWS(napi_create_string_utf8(env, cval, strlen(cval), &val)) \
+      nerr = napi_set_named_property(env, dobj, #prop, val); \
+      free(cval); \
+    } \
+    if(nerr != napi_ok) { \
+      goto cleanup; \
+    }
+
+#define setDeviceStringProperty(prop, cval) \
+    if(cval == NULL) { \
+      nerr = napi_set_named_property(env, dobj, #prop, null_object); \
+    } else { \
+      NAPI_STATUS_THROWS(napi_create_string_utf8(env, cval, strlen(cval), &val)) \
+      nerr = napi_set_named_property(env, dobj, #prop, val); \
+    } \
+    if(nerr != napi_ok) { \
+      goto cleanup; \
+    }
+
+NAPI_METHOD(getDevices) {
+  napi_value* arr;
+  NAPI_STATUS_THROWS(napi_create_array(env, &arr));
+
+  napi_value null_object;
+  NAPI_STATUS_THROWS(napi_get_null(env, &null_object));
+
+  LIBMTP_raw_device_t* rawdevices = NULL;
+  int numrawdevices;
+  LIBMTP_error_number_t err = LIBMTP_Detect_Raw_Devices(&rawdevices, &numrawdevices);
+  switch(err) {
+  case LIBMTP_ERROR_NO_DEVICE_ATTACHED:
+    return arr;
+    return 0;
+  case LIBMTP_ERROR_CONNECTING:
+    napi_throw_error(env, "LIBMTP_ERROR_CONNECTING", "There has been an error connecting.");
+    return NULL;
+  case LIBMTP_ERROR_MEMORY_ALLOCATION:
+    napi_throw_error(env, "LIBMTP_ERROR_MEMORY_ALLOCATION", "Encountered a Memory Allocation Error.");
+    return NULL;
+  case LIBMTP_ERROR_NONE:
+    break;
+  case LIBMTP_ERROR_GENERAL:
+  default:
+    napi_throw_error(env, "LIBMTP_ERROR_GENERAL", "Unknown connection error.");
+    return NULL;
+  }
+
+  const char* cerr;
+  LIBMTP_mtpdevice_t *device = NULL;
+  int i;
+  for (i = 0; i < numrawdevices; i++) {
+    napi_value dobj;
+    napi_status nerr = napi_create_object(env, &dobj);
+    if(nerr != napi_ok) {
+      goto cleanup;
+    }
+    LIBMTP_devicestorage_t *storage;
+    uint8_t maxbattlevel;
+    uint8_t currbattlevel;
+    int ret;
+    napi_value val;
+    char* cval;
+
+    setDeviceStringProperty(rawVendor, rawdevices[i].device_entry.vendor);
+    setDeviceStringProperty(rawProduct, rawdevices[i].device_entry.product);
+
+    device = LIBMTP_Open_Raw_Device_Uncached(&rawdevices[i]);
+    if (device == NULL) {
+      fprintf(stderr, "Unable to open raw device %d\n", i);
+      continue;
+    }
+
+    extractDeviceStringProperty(Manufacturername, manufacturer);
+    extractDeviceStringProperty(Modelname, model);
+    extractDeviceStringProperty(Friendlyname, name);
+    extractDeviceStringProperty(Serialnumber, serial);
+    extractDeviceStringProperty(Deviceversion, version);
+
+    ret = LIBMTP_Get_Batterylevel(device, &maxbattlevel, &currbattlevel);
+    if (ret == 0) {
+      nerr = napi_create_double(env, ((float) currbattlevel/ (float) maxbattlevel), &val);
+      if(nerr != napi_ok) {
+        goto cleanup;
+      }
+      nerr = napi_set_named_property(env, dobj, "battery", val);
+      if(nerr != napi_ok) {
+        goto cleanup;
+      }
+    } else {
+      // Silently ignore. Some devices does not support getting the
+      // battery level.
+      LIBMTP_Clear_Errorstack(device);
+      nerr = napi_set_named_property(env, dobj, "battery", null_object);
+    }
+    LIBMTP_Release_Device(device);
+    device = NULL;
+
+    nerr = napi_set_element(env, arr, i, dobj);
+    if(nerr != napi_ok) {
+      goto cleanup;
+    }
+
+  }
+  free(rawdevices);
+  return arr;
+
+cleanup:
+  fprintf(stderr, "jumped to cleanup. something happened...\n");
+  if(device != NULL) {
+    LIBMTP_Release_Device(device);
+  }
+
+  if(rawdevices != NULL) {
+    free(rawdevices);
+  }
+}
+
 NAPI_INIT() {
   LIBMTP_Init();
   fprintf(stdout, "libmtp version: " LIBMTP_VERSION_STRING "\n\n");
@@ -102,4 +224,5 @@ NAPI_INIT() {
   NAPI_EXPORT_FUNCTION(getFile)
   NAPI_EXPORT_FUNCTION(getFileListing)
   NAPI_EXPORT_FUNCTION(release)
+  NAPI_EXPORT_FUNCTION(getDevices)
 }
